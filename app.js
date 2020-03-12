@@ -4,11 +4,11 @@
 //fs.appendFileSync('notes.txt', ' Jalale perrooooo')
 
 const utils = require('./utils.js')
-const getNotes = require('./notes.js')
+//const getNotes = require('./notes.js')
 
 const name = 'Daniel'
 const add = utils(1,8)
-const notes = getNotes()
+//const notes = getNotes()
 
 //console.log(name)
 //console.log(utils)
@@ -39,6 +39,7 @@ if (command === 'add') {
 */
 
 const yargs = require('yargs')
+const notes = require('./notes.js')
 yargs.version('1.0.1')
 
 
@@ -49,8 +50,23 @@ yargs.version('1.0.1')
 yargs.command({
     command: 'add',
     describe: 'Add a new note',
-    handler: function () {
-        console.log('Adding a new note')
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        },
+        body: {
+            describe: 'Note body',
+            //demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: function (argv) {
+        //console.log('Adding a new note', argv)
+        //console.log('Title: ' + argv.title)
+        //console.log('Body: ' + argv.body)
+        notes.addNote(argv.title, argv.body)
     }
 })
 
@@ -59,8 +75,16 @@ yargs.command({
 yargs.command({
     command: 'remove',
     describe: 'Remove a note',
-    handler: function () {
-        console.log('Removing a note...')
+    builder: {
+        title: {
+            describe: 'Note title',
+            //demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: function (argv) {
+        //console.log('Removing a note...')
+        notes.removeNotes(argv.title)
     }
 })
 
@@ -69,8 +93,9 @@ yargs.command({
 yargs.command({
     command: 'list',
     describe: 'Listing a note',
-    handler: function () {
-        console.log('Listing a note...')
+    handler: function (argv) {
+        //console.log('Listing a note...')
+        notes.listNotes()
     }
 })
 
@@ -79,11 +104,19 @@ yargs.command({
 yargs.command({
     command: 'read',
     describe: 'Reading a note',
-    handler: function () {
+    builder: {
+        title: {
+            describe: 'Note title',
+            type: 'string'
+        }
+    },
+    handler: function (argv) {
         console.log('Reading a note...')
+        notes.readNotes(argv.title)
     }
 })
 
 // add, remove, read, list
 
-console.log(yargs.argv)
+//console.log(yargs.argv)
+yargs.parse()
